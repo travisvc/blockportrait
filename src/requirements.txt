@@ -1,0 +1,5 @@
+torch==2.3.0
+opencv-python
+ultralytics
+flask
+flask_cors

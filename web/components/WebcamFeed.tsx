@@ -2,18 +2,14 @@
 
 import { useEffect, useRef } from "react";
 
-interface WebcamFeedProps {
-  ipAddress: string;
-}
-
-const WebcamFeed: React.FC<WebcamFeedProps> = ({ ipAddress }) => {
+const WebcamFeed = () => {
   const videoRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.src = `http://${ipAddress}:5000/video`;
+      videoRef.current.src = `http://localhost:5000/video`;
     }
-  }, [ipAddress]);
+  }, []);
 
   return (
     <div>

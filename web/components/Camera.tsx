@@ -2,14 +2,20 @@
 
 import { useEffect, useRef } from "react";
 
-const WebcamFeed = () => {
+interface CameraProps {
+  stopCamera: boolean;
+}
+
+const Camera: React.FC<CameraProps> = ({ stopCamera }) => {
   const videoRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && !stopCamera) {
       videoRef.current.src = `http://localhost:5000/video`;
+    } else if (videoRef.current && stopCamera) {
+      videoRef.current.src = "";
     }
-  }, []);
+  }, [stopCamera]);
 
   return (
     <div>
@@ -18,4 +24,4 @@ const WebcamFeed = () => {
   );
 };
 
-export default WebcamFeed;
+export default Camera;

@@ -50,17 +50,23 @@ const Home = () => {
     <div className="flex flex-col items-center w-full max-h-screen text-black">
       <Navbar />
 
-      <div className="flex h-screen w-full px-28">
-        <div className="flex flex-col py-6 px-16 w-2/3 bg-[#f5f5f5]">
-          <div className="border-4 rounded-lg overflow-hidden max-w-[720px] bg-[#f8f9fa]">
-            {!photo ? (
-              <WebcamFeed />
-            ) : (
-              <img src={photo} alt="Captured frame" className="w-full" />
-            )}
+      <div className="flex h-screen w-full">
+        <div className="flex flex-col justify-between bg-[#f5f5f5]">
+          <div className="flex items-center px-10 w-full h-full">
+            <div className="border-4 rounded-lg overflow-hidden max-w-[720px] bg-[#f8f9fa]">
+              {!photo ? (
+                <WebcamFeed />
+              ) : (
+                <img src={photo} alt="Captured frame" className="w-full" />
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center p-8 w-full bg-neutral-300">
+            Take a photo
           </div>
         </div>
-        <div className="flex flex-col py-6 px-16 w-1/3 bg-white">
+        <div className="flex flex-col py-6 px-10 w-5/12 bg-white">
           <button
             onClick={() => getPhoto()}
             className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -81,7 +87,7 @@ const Home = () => {
             className="p-2 bg-green-500 text-white rounded hover:bg-green-600 mt-4"
             disabled={!photo}
           >
-            Submit Photo and Tags
+            Generate Image
           </button>
         </div>
       </div>

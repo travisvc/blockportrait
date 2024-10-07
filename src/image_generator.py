@@ -5,10 +5,10 @@ import io
 from fastapi import UploadFile
 from fastapi.responses import StreamingResponse
 
-# pipeline = AutoPipelineForImage2Image.from_pretrained(
-#     "stable-diffusion-v1-5/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
-# )
-# pipeline.enable_model_cpu_offload()
+pipeline = AutoPipelineForImage2Image.from_pretrained(
+    "stable-diffusion-v1-5/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
+)
+pipeline.enable_model_cpu_offload()
 
 async def generate_image(image: UploadFile, prompt: str, strength: float = 0.5, guidance_scale: float = 13):
     """
@@ -28,10 +28,10 @@ async def generate_image(image: UploadFile, prompt: str, strength: float = 0.5, 
         init_image = Image.open(io.BytesIO(image_data)).convert("RGB")
 
         # Generate the image 
-        # generated_image = pipeline(prompt, image=init_image, strength=strength, guidance_scale=guidance_scale).images[0]
+        generated_image = pipeline(prompt, image=init_image, strength=strength, guidance_scale=guidance_scale).images[0]
 
         img_bytes = io.BytesIO()
-        # generated_image.save(img_bytes, format="PNG")
+        generated_image.save(img_bytes, format="PNG")
         img_bytes.seek(0)
 
         return StreamingResponse(img_bytes, media_type="image/png")

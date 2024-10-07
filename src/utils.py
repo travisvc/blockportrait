@@ -14,9 +14,9 @@ def generate_frames():
             break
 
         last_raw_frame = frame.copy() 
-        # processed_frame = process_frame(frame)
+        processed_frame = process_frame(frame)
 
-        ret, buffer = cv2.imencode('.jpg', frame)
+        ret, buffer = cv2.imencode('.jpg', processed_frame)
         frame = buffer.tobytes()
 
         yield (b'--frame\r\n'

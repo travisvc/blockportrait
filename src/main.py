@@ -1,14 +1,10 @@
-import torch
 from fastapi import FastAPI, File, Form, UploadFile
-from fastapi.responses import StreamingResponse, Response, JSONResponse
+from fastapi.responses import StreamingResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
-from diffusers import AutoPipelineForImage2Image
-from diffusers.utils import load_image, make_image_grid
-from PIL import Image
-import uvicorn
 import cv2
-import io
-from image_classifier import process_frame  
+import uvicorn
+from image_classifier import process_frame  # Your existing image classifier logic
+from image_generator import generate_image  # Newly created image generator logic
 
 last_raw_frame = None
 
@@ -18,7 +14,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["*"], 
+    allow_methods=["*"],  
     allow_headers=["*"],  
 )
 
@@ -34,7 +30,7 @@ def generate_frames():
         last_raw_frame = frame.copy()  
         processed_frame = process_frame(frame)
 
-        ret, buffer = cv2.imencode('.jpg', processed_frame)
+        ret, buffer = cv2.imencode('.jpg', processed_frame) 
         frame = buffer.tobytes()
 
         yield (b'--frame\r\n'
@@ -44,8 +40,8 @@ def generate_frames():
 async def video_feed():
     return StreamingResponse(generate_frames(), media_type='multipart/x-mixed-replace; boundary=frame')
 
-@app.get('/last_frame')
-async def get_last_frame():
+@app.get('/take_photo')
+async def get_photo():
     global last_raw_frame
     if last_raw_frame is None:
         return Response(content="No frame available", status_code=404)
@@ -55,25 +51,12 @@ async def get_last_frame():
 
     return Response(content=frame, media_type="image/jpeg")
 
-pipeline = AutoPipelineForImage2Image.from_pretrained(
-    "stable-diffusion-v1-5/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
-)
-pipeline.enable_model_cpu_offload()
-
-@app.post("/submit_image")
-async def submit_image(image: UploadFile = File(...), tags: str = Form(...)):
+@app.post("/generate_image")
+async def get_generated_image(image: UploadFile = File(...), tags: str = Form(...)):
     try:
         image_data = await image.read()
-        init_image = Image.open(io.BytesIO(image_data)).convert("RGB")
 
-        prompt = tags 
-        strength = 0.5  # Range: 0-1, default around 0.8
-        guidance_scale = 13  # Range: 1-15, default around 7.5 
-        generated_image = pipeline(prompt, image=init_image, strength=strength, guidance_scale=guidance_scale).images[0]
-
-        img_bytes = io.BytesIO()
-        generated_image.save(img_bytes, format="PNG")
-        img_bytes.seek(0)
+        img_bytes = generate_image(image_data, prompt=tags)
 
         return StreamingResponse(img_bytes, media_type="image/png")
 

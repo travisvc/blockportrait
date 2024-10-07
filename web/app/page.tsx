@@ -10,7 +10,7 @@ const Home = () => {
 
   const getPhoto = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/last_frame`);
+      const response = await fetch(`http://localhost:5000/take_photo`);
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setPhoto(imageUrl);
@@ -28,7 +28,7 @@ const Home = () => {
       formData.append("image", blob, "captured_image.jpg");
       formData.append("tags", tags);
 
-      const response = await fetch(`http://localhost:5000/submit_image`, {
+      const response = await fetch(`http://localhost:5000/generate_image`, {
         method: "POST",
         body: formData,
       });
@@ -73,7 +73,6 @@ const Home = () => {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="Enter tags for the image"
-            // placeholder="gandalf, lord of the rings, detailed, fantasy, cute, adorable, Pixar, Disney"
             className="p-2 border border-gray-400 rounded mt-4"
           />
 

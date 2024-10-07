@@ -5,7 +5,6 @@ from ultralytics import YOLO
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Using device: {device}')
 
-# Load YOLO model
 model = YOLO('yolov8s.pt')
 
 def process_frame(frame):

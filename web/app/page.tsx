@@ -43,7 +43,7 @@ const Home = () => {
   const sendPhotoWithTags = async () => {
     if (!photo) return;
 
-    setLoading(true); // Start loading
+    setLoading(true);
     const tags = `${selectedEnvironment}, ${selectedDrawingStyle}`;
 
     try {
@@ -68,7 +68,7 @@ const Home = () => {
     } catch (error) {
       console.error("Error sending data:", error);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 

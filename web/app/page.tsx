@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Camera from "@/components/Camera";
-import Navbar from "@/components/Navbar";
-import RadioInput from "@/components/RadioInput";
+import PromptForm from "@/components/PromptForm";
 
 const Home = () => {
   const [photo, setPhoto] = useState<string | null>(null);
@@ -17,6 +16,15 @@ const Home = () => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (step === 1) {
+      setPhoto(null);
+      setStopCamera(false);
+      setSelectedEnvironment("");
+      setSelectedDrawingStyle("");
+    }
+  }, [step]);
 
   const getPhoto = async () => {
     try {
@@ -60,143 +68,127 @@ const Home = () => {
     }
   };
 
-  const takeNewPhoto = () => {
+  const retakePhoto = () => {
     setStep(1);
-    setStopCamera(false);
-    setPhoto(null);
-    setSelectedEnvironment("");
-    setSelectedDrawingStyle("");
+  };
+
+  const goBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
   };
 
   if (!isMounted) return null;
 
   return (
     <div className="flex flex-col items-center w-full max-h-screen text-black">
-      <Navbar />
-
       <div className="flex h-screen w-full">
         <div className="flex flex-col justify-between w-full bg-[#f5f5f5]">
-          <div className="flex items-center justify-center px-10 w-full h-full">
-            <div className="border-4 rounded-lg overflow-hidden max-w-[720px] bg-[#f8f9fa]">
-              {!photo ? (
-                <Camera stopCamera={stopCamera} />
-              ) : (
-                <img src={photo} alt="Captured frame" className="w-full" />
-              )}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center p-4 w-full bg-neutral-300">
-            <div className="flex items-center justify-center w-full p-3 rounded bg-white">
-              Onboarding
-              <p>Stijl o Cartoon o Surrealistisch o Realistisch</p>
-              <p>Thema o Historisch o Avontuurlijk o Vredig o Natuurlijk</p>
-              <p>
-                Onderwerp o Gebouwen o Dieren o Planten o Personen o Voertuigen
-              </p>
-              <p>Achtergrond o Jungle o Modern o Prehistorie</p>
-            </div>
+          <div className="flex items-center justify-center w-full h-screen max-h-screen overflow-hidden">
+            {!photo ? (
+              <Camera stopCamera={stopCamera} />
+            ) : (
+              <img src={photo} alt="Captured frame" className="w-full" />
+            )}
           </div>
         </div>
 
-        <div className="flex flex-col py-6 px-10 w-5/12 bg-white">
+        <div className="flex flex-col p-6 w-6/12 bg-white">
           {/* Step 1: Take a photo */}
           {step === 1 && (
-            <button
-              onClick={getPhoto}
-              className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Take photo
-            </button>
+            <div className="flex flex-col h-full w-full justify-end">
+              <button
+                onClick={getPhoto}
+                className="p-2 w-full bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Take photo
+              </button>
+            </div>
           )}
 
           {/* Step 2: Select Environment */}
           {step === 2 && (
-            <>
-              <div className="mt-4">
-                <h3 className="mb-5 text-lg font-medium">
-                  Select an environment
-                </h3>
-                <ul className="grid w-full gap-6 md:grid-cols-2">
-                  <RadioInput
-                    id="environment-jungle"
-                    name="environment"
-                    value="Jungle"
-                    title="Jungle"
-                    onChange={setSelectedEnvironment}
-                  />
-                  <RadioInput
-                    id="environment-space"
-                    name="environment"
-                    value="Space"
-                    title="Space"
-                    onChange={setSelectedEnvironment}
-                  />
-                </ul>
-              </div>
-              <button
-                onClick={() => selectedEnvironment && setStep(3)}
-                className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-4"
-                disabled={!selectedEnvironment}
-              >
-                Next
-              </button>
-            </>
+            <PromptForm
+              title="Select an environment"
+              options={[
+                { id: "environment-jungle", value: "Jungle", title: "Jungle" },
+                { id: "environment-space", value: "Space", title: "Space" },
+              ]}
+              selectedOption={selectedEnvironment}
+              setSelectedOption={setSelectedEnvironment}
+              onNext={() => selectedEnvironment && setStep(3)}
+              onBack={goBack}
+              onRetakePhoto={retakePhoto}
+            />
           )}
 
           {/* Step 3: Select Drawing Style */}
           {step === 3 && (
-            <>
-              <div className="mt-4">
-                <h3 className="mb-5 text-lg font-medium">
-                  Select a drawing style
-                </h3>
-                <ul className="grid w-full gap-6 md:grid-cols-2">
-                  <RadioInput
-                    id="style-cartoon"
-                    name="drawing_style"
-                    value="Cartoon"
-                    title="Cartoon"
-                    onChange={setSelectedDrawingStyle}
-                  />
-                  <RadioInput
-                    id="style-artsy"
-                    name="drawing_style"
-                    value="Artsy"
-                    title="Artsy"
-                    onChange={setSelectedDrawingStyle}
-                  />
-                </ul>
-              </div>
-              <button
-                onClick={() => selectedDrawingStyle && setStep(4)}
-                className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-4"
-                disabled={!selectedDrawingStyle}
-              >
-                Next
-              </button>
-            </>
+            <PromptForm
+              title="Select a style"
+              options={[
+                { id: "style-cartoon", value: "Cartoon", title: "Cartoon" },
+                { id: "style-artsy", value: "Artsy", title: "Artsy" },
+              ]}
+              selectedOption={selectedDrawingStyle}
+              setSelectedOption={setSelectedDrawingStyle}
+              onNext={() => selectedDrawingStyle && setStep(4)}
+              onBack={goBack}
+              onRetakePhoto={retakePhoto}
+            />
           )}
 
           {/* Step 4: Generate Image */}
           {step === 4 && (
-            <button
-              onClick={sendPhotoWithTags}
-              className="p-2 bg-green-500 text-white rounded hover:bg-green-600 mt-4"
-              disabled={!photo || !selectedEnvironment || !selectedDrawingStyle}
-            >
-              Generate Image
-            </button>
+            <div className="flex flex-col h-full w-full justify-between">
+              <div className="flex justify-between">
+                <button
+                  onClick={goBack}
+                  className="p-2 border rounded text-neutral-400"
+                >
+                  <svg
+                    className="w-3 h-3 rotate-180"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                </button>
+                <button onClick={retakePhoto} className="p-2 border rounded">
+                  <img className="w-3 h-3" src="refresh.svg" alt="refresh" />
+                </button>
+              </div>
+
+              <button
+                onClick={sendPhotoWithTags}
+                className="p-2 bg-green-500 text-white rounded hover:bg-green-600 mt-4"
+                disabled={
+                  !photo || !selectedEnvironment || !selectedDrawingStyle
+                }
+              >
+                Generate Image
+              </button>
+            </div>
           )}
 
           {/* Step 5: Take a new photo */}
           {step === 5 && (
-            <button
-              onClick={takeNewPhoto}
-              className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 mt-4"
-            >
-              Take a new photo
-            </button>
+            <div className="flex flex-col h-full w-full justify-end">
+              <button
+                onClick={retakePhoto}
+                className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 mt-4"
+              >
+                Take a new photo
+              </button>
+            </div>
           )}
         </div>
       </div>

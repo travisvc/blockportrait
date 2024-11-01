@@ -10,4 +10,4 @@ fastapi
 uvicorn
 opencv-python
 ultralytics
-# python-multipart
+python-multipart

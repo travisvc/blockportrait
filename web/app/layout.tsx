@@ -8,7 +8,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lego AI",
+  title: "BlockPortAIt",
   description: "Datalab - Hogeschool van Amsterdam",
 };
 

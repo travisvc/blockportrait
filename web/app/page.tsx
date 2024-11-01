@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Camera from "@/components/Camera";
-import RadioInput from "@/components/RadioInput";
 import PromptForm from "@/components/PromptForm";
 
 const Home = () => {

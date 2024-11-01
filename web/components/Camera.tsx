@@ -19,7 +19,7 @@ const Camera: React.FC<CameraProps> = ({ stopCamera }) => {
 
   return (
     <div>
-      <img ref={videoRef} alt="Webcam Feed" className="w-full h-[80%]" />
+      <img ref={videoRef} alt="No Camera Feed" className="w-full h-[80%]" />
     </div>
   );
 };

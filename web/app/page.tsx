@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Camera from "@/components/Camera";
+import RadioInput from "@/components/RadioInput";
 import PromptForm from "@/components/PromptForm";
 
 const Home = () => {
@@ -10,6 +11,7 @@ const Home = () => {
   const [selectedDrawingStyle, setSelectedDrawingStyle] = useState("");
   const [step, setStep] = useState(1);
   const [stopCamera, setStopCamera] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -42,6 +44,7 @@ const Home = () => {
   const sendPhotoWithTags = async () => {
     if (!photo) return;
 
+    setLoading(true); // Start loading
     const tags = `${selectedEnvironment}, ${selectedDrawingStyle}`;
 
     try {
@@ -65,6 +68,8 @@ const Home = () => {
       }
     } catch (error) {
       console.error("Error sending data:", error);
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -83,12 +88,19 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center w-full max-h-screen text-black">
       <div className="flex h-screen w-full">
-        <div className="flex flex-col justify-between w-full bg-[#f5f5f5]">
+        <div className="flex flex-col justify-between w-full bg-[#f5f5f5] relative">
           <div className="flex items-center justify-center w-full h-screen max-h-screen overflow-hidden">
             {!photo ? (
               <Camera stopCamera={stopCamera} />
             ) : (
-              <img src={photo} alt="Captured frame" className="w-full" />
+              <div className="relative flex items-center justify-center w-full h-full">
+                <img src={photo} alt="Failed to generate an image" />
+                {loading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md text-white text-lg">
+                    Generating Image, Please Wait...
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -169,9 +181,17 @@ const Home = () => {
 
               <button
                 onClick={sendPhotoWithTags}
-                className="p-2 bg-green-500 text-white rounded hover:bg-green-600 mt-4"
+                className={`p-2 rounded mt-4 text-white 
+                ${
+                  loading
+                    ? "bg-green-300 cursor-not-allowed opacity-50"
+                    : "bg-green-500 hover:bg-green-600"
+                }`}
                 disabled={
-                  !photo || !selectedEnvironment || !selectedDrawingStyle
+                  !photo ||
+                  !selectedEnvironment ||
+                  !selectedDrawingStyle ||
+                  loading
                 }
               >
                 Generate Image

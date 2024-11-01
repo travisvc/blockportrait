@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${ibmPlexMono.className} bg-[#323232]`}>
+      <body className={`${ibmPlexMono.className} bg-[#f5f5f5]`}>
         {children}
       </body>
     </html>

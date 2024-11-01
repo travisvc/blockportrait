@@ -89,6 +89,12 @@ const Home = () => {
           <div className="flex items-center justify-center p-4 w-full bg-neutral-300">
             <div className="flex items-center justify-center w-full p-3 rounded bg-white">
               Onboarding
+              <p>Stijl o Cartoon o Surrealistisch o Realistisch</p>
+              <p>Thema o Historisch o Avontuurlijk o Vredig o Natuurlijk</p>
+              <p>
+                Onderwerp o Gebouwen o Dieren o Planten o Personen o Voertuigen
+              </p>
+              <p>Achtergrond o Jungle o Modern o Prehistorie</p>
             </div>
           </div>
         </div>

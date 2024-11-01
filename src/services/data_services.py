@@ -1,6 +1,6 @@
 import cv2
 from fastapi import Response
-from services.image_classifier import process_frame  
+from services.classifier_service import process_frame  
 
 last_raw_frame = None
 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, Form, UploadFile
 from fastapi.responses import StreamingResponse
-from utils.utils import generate_frames, get_last_photo  
-from services.image_generator import generate_image  
+from services.data_services import generate_frames, get_last_photo  
+from services.generator_service import generate_image  
 
 api_router = APIRouter()
 

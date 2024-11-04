@@ -5,8 +5,13 @@ import io
 from fastapi import UploadFile
 from fastapi.responses import StreamingResponse
 
+model_dir = "./models/stable-diffusion-v1-5"
+
 pipeline = AutoPipelineForImage2Image.from_pretrained(
-    "stable-diffusion-v1-5/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
+    "stable-diffusion-v1-5/stable-diffusion-v1-5",
+    torch_dtype=torch.float16,
+    cache_dir=model_dir,  
+    use_safetensors=True
 )
 pipeline.enable_model_cpu_offload()
 

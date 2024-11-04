@@ -29,7 +29,7 @@ const RadioInput: React.FC<RadioInputProps> = ({
       />
       <label
         htmlFor={id}
-        className="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600"
+        className="inline-flex items-center justify-center w-full p-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600"
       >
         <div className="block">
           <div className="w-full text-lg">{title}</div>

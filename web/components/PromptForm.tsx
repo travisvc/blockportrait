@@ -31,10 +31,10 @@ const PromptForm: React.FC<PromptFormProps> = ({
       <div className="flex justify-between">
         <button
           onClick={onBack}
-          className="p-2 border rounded text-neutral-400"
+          className="p-5 border rounded text-neutral-400"
         >
           <svg
-            className="w-3 h-3 rotate-180"
+            className="w-4 h-4 rotate-180"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -49,8 +49,8 @@ const PromptForm: React.FC<PromptFormProps> = ({
             />
           </svg>
         </button>
-        <button onClick={onRetakePhoto} className="p-2 border rounded">
-          <img className="w-3 h-3" src="refresh.svg" alt="refresh" />
+        <button onClick={onRetakePhoto} className="p-5 border rounded">
+          <img className="w-4 h-4" src="refresh.svg" alt="refresh" />
         </button>
       </div>
 
@@ -72,7 +72,7 @@ const PromptForm: React.FC<PromptFormProps> = ({
 
       <button
         onClick={onNext}
-        className="relative flex items-center justify-center p-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-4"
+        className="relative flex items-center justify-center p-3 bg-blue-500 text-white rounded hover:bg-blue-600 mt-4"
         disabled={!selectedOption}
       >
         Next

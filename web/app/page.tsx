@@ -87,16 +87,16 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center w-full max-h-screen text-black">
       <div className="flex h-screen w-full">
-        <div className="flex flex-col justify-between w-full bg-[#f5f5f5] relative">
-          <div className="flex items-center justify-center w-full h-screen max-h-screen overflow-hidden">
+        <div className="flex w-full bg-[#f5f5f5] relative">
+          <div className="flex items-center justify-center w-full max-h-screen overflow-hidden">
             {!photo ? (
-              <Camera stopCamera={stopCamera} />
+                <Camera stopCamera={stopCamera} />
             ) : (
               <div className="relative flex items-center justify-center w-full h-full">
-                <img src={photo} alt="Failed to generate an image" />
+                <img src={photo} alt="Failed to generate an image" className="w-full h-full object-cover" />
                 {loading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md text-white text-lg">
-                    Generating Image, Please Wait...
+                  <div className="absolute inset-0 flex items-center justify-center bg-neutral-600 bg-opacity-40 backdrop-blur-md text-white text-lg">
+                    Generating image, please wait...
                   </div>
                 )}
               </div>
@@ -104,13 +104,13 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="flex flex-col p-6 w-6/12 bg-white">
+        <div className="flex flex-col p-8 w-6/12 bg-white">
           {/* Step 1: Take a photo */}
           {step === 1 && (
             <div className="flex flex-col h-full w-full justify-end">
               <button
                 onClick={getPhoto}
-                className="p-2 w-full bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="p-3 w-full bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Take photo
               </button>
@@ -155,10 +155,10 @@ const Home = () => {
               <div className="flex justify-between">
                 <button
                   onClick={goBack}
-                  className="p-2 border rounded text-neutral-400"
+                  className="p-5 border rounded text-neutral-400"
                 >
                   <svg
-                    className="w-3 h-3 rotate-180"
+                    className="w-4 h-4 rotate-180"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -173,14 +173,14 @@ const Home = () => {
                     />
                   </svg>
                 </button>
-                <button onClick={retakePhoto} className="p-2 border rounded">
-                  <img className="w-3 h-3" src="refresh.svg" alt="refresh" />
+                <button onClick={retakePhoto} className="p-5 border rounded">
+                  <img className="w-4 h-4" src="refresh.svg" alt="refresh" />
                 </button>
               </div>
 
               <button
                 onClick={sendPhotoWithTags}
-                className={`p-2 rounded mt-4 text-white 
+                className={`p-3 rounded mt-4 text-white 
                 ${
                   loading
                     ? "bg-green-300 cursor-not-allowed opacity-50"
@@ -203,7 +203,7 @@ const Home = () => {
             <div className="flex flex-col h-full w-full justify-end">
               <button
                 onClick={retakePhoto}
-                className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 mt-4"
+                className="p-3 bg-yellow-500 text-white rounded hover:bg-yellow-600 mt-4"
               >
                 Take a new photo
               </button>

@@ -8,11 +8,32 @@ const Home = () => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [selectedEnvironment, setSelectedEnvironment] = useState("");
   const [selectedDrawingStyle, setSelectedDrawingStyle] = useState("");
+  const [selectedFantasy, setSelectedFantasy] = useState("");
   const [step, setStep] = useState(1);
   const [stopCamera, setStopCamera] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [isMounted, setIsMounted] = useState(false);
+
+  const environmentOptions = [
+    { id: "environment-jungle", value: "Jungle", title: "Jungle" },
+    { id: "environment-space", value: "Space", title: "Space" },
+    { id: "environment-underwater", value: "Underwater", title: "Underwater" },
+    { id: "environment-desert", value: "Desert", title: "Desert" },
+  ];
+
+  const drawingStyleOptions = [
+    { id: "style-cartoon", value: "Cartoon", title: "Cartoon" },
+    { id: "style-artsy", value: "Artsy", title: "Artsy" },
+    { id: "style-realistic", value: "Realistic", title: "Realistic" },
+    { id: "style-surreal", value: "Surreal", title: "Surreal" },
+  ];
+
+  const fantasyOptions = [
+    { id: "cyberpunk", value: "A neon-lit cyberpunk city at night, with rain-slicked streets, towering skyscrapers, holographic advertisements, people with futuristic attire, vibrant colors, reflections on wet pavement, cinematic, Blade Runner aesthetic.", title: "Cyberpunk" },
+    { id: "medieval-village", value: "A bustling medieval village marketplace during the day, with cobblestone streets, people wearing historical clothing, wooden stalls selling fruits and vegetables, a castle visible in the background, lively and detailed, Renaissance-style art.", title: "Medieval" },
+    { id: "magic-forest", value: "A mystical forest at twilight with glowing mushrooms, soft purple and blue light filtering through the trees, fireflies, ethereal and enchanted atmosphere, highly detailed, fantasy illustration.", title: "Magic" },
+    { id: "alien-world", value: "A surreal alien landscape with bioluminescent plants, unusual rock formations, a vibrant purple sky with two moons, otherworldly atmosphere, sci-fi fantasy, glowing details.", title: "Alien" },
+  ];
 
   useEffect(() => {
     setIsMounted(true);
@@ -24,6 +45,7 @@ const Home = () => {
       setStopCamera(false);
       setSelectedEnvironment("");
       setSelectedDrawingStyle("");
+      setSelectedFantasy("");
     }
   }, [step]);
 
@@ -44,7 +66,7 @@ const Home = () => {
     if (!photo) return;
 
     setLoading(true);
-    const tags = `${selectedEnvironment}, ${selectedDrawingStyle}`;
+    const tags = `${selectedEnvironment}, ${selectedDrawingStyle}, ${selectedFantasy}`;
 
     try {
       const blob = await fetch(photo).then((res) => res.blob());
@@ -105,7 +127,6 @@ const Home = () => {
         </div>
 
         <div className="flex flex-col p-8 w-6/12 bg-white">
-          {/* Step 1: Take a photo */}
           {step === 1 && (
             <div className="flex flex-col h-full w-full justify-end">
               <button
@@ -117,14 +138,10 @@ const Home = () => {
             </div>
           )}
 
-          {/* Step 2: Select Environment */}
           {step === 2 && (
             <PromptForm
               title="Select an environment"
-              options={[
-                { id: "environment-jungle", value: "Jungle", title: "Jungle" },
-                { id: "environment-space", value: "Space", title: "Space" },
-              ]}
+              options={environmentOptions}
               selectedOption={selectedEnvironment}
               setSelectedOption={setSelectedEnvironment}
               onNext={() => selectedEnvironment && setStep(3)}
@@ -133,14 +150,10 @@ const Home = () => {
             />
           )}
 
-          {/* Step 3: Select Drawing Style */}
           {step === 3 && (
             <PromptForm
               title="Select a style"
-              options={[
-                { id: "style-cartoon", value: "Cartoon", title: "Cartoon" },
-                { id: "style-artsy", value: "Artsy", title: "Artsy" },
-              ]}
+              options={drawingStyleOptions}
               selectedOption={selectedDrawingStyle}
               setSelectedOption={setSelectedDrawingStyle}
               onNext={() => selectedDrawingStyle && setStep(4)}
@@ -149,8 +162,19 @@ const Home = () => {
             />
           )}
 
-          {/* Step 4: Generate Image */}
           {step === 4 && (
+            <PromptForm
+              title="Select an imaginary realm"
+              options={fantasyOptions}
+              selectedOption={selectedFantasy}
+              setSelectedOption={setSelectedFantasy}
+              onNext={() => selectedFantasy && setStep(5)}
+              onBack={goBack}
+              onRetakePhoto={retakePhoto}
+            />
+          )}
+
+          {step === 5 && (
             <div className="flex flex-col h-full w-full justify-between">
               <div className="flex justify-between">
                 <button
@@ -198,7 +222,6 @@ const Home = () => {
             </div>
           )}
 
-          {/* Step 5: Take a new photo */}
           {step === 5 && (
             <div className="flex flex-col h-full w-full justify-end">
               <button

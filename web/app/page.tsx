@@ -83,7 +83,7 @@ const Home = () => {
         const imageUrl = URL.createObjectURL(imageBlob);
         setPhoto(imageUrl);
         console.log("Generated image received and displayed!");
-        setStep(5);
+        setStep(6);
       } else {
         console.error("Failed to generate image");
       }
@@ -222,7 +222,7 @@ const Home = () => {
             </div>
           )}
 
-          {step === 5 && (
+          {step === 6 && (
             <div className="flex flex-col h-full w-full justify-end">
               <button
                 onClick={retakePhoto}

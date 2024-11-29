@@ -9,6 +9,8 @@ const Home = () => {
   const [selectedEnvironment, setSelectedEnvironment] = useState("");
   const [selectedDrawingStyle, setSelectedDrawingStyle] = useState("");
   const [selectedFantasy, setSelectedFantasy] = useState("");
+  const [strength, setStrength] = useState(0.5);
+  const [guidanceScale, setGuidanceScale] = useState(13);
   const [step, setStep] = useState(1);
   const [stopCamera, setStopCamera] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,10 +31,30 @@ const Home = () => {
   ];
 
   const fantasyOptions = [
-    { id: "cyberpunk", value: "A neon-lit cyberpunk city at night, with rain-slicked streets, towering skyscrapers, holographic advertisements, people with futuristic attire, vibrant colors, reflections on wet pavement, cinematic, Blade Runner aesthetic.", title: "Cyberpunk" },
-    { id: "medieval-village", value: "A bustling medieval village marketplace during the day, with cobblestone streets, people wearing historical clothing, wooden stalls selling fruits and vegetables, a castle visible in the background, lively and detailed, Renaissance-style art.", title: "Medieval" },
-    { id: "magic-forest", value: "A mystical forest at twilight with glowing mushrooms, soft purple and blue light filtering through the trees, fireflies, ethereal and enchanted atmosphere, highly detailed, fantasy illustration.", title: "Magic" },
-    { id: "alien-world", value: "A surreal alien landscape with bioluminescent plants, unusual rock formations, a vibrant purple sky with two moons, otherworldly atmosphere, sci-fi fantasy, glowing details.", title: "Alien" },
+    {
+      id: "cyberpunk",
+      value:
+        "A neon-lit cyberpunk city at night, with rain-slicked streets, towering skyscrapers, holographic advertisements, people with futuristic attire, vibrant colors, reflections on wet pavement, cinematic, Blade Runner aesthetic.",
+      title: "Cyberpunk",
+    },
+    {
+      id: "medieval-village",
+      value:
+        "A bustling medieval village marketplace during the day, with cobblestone streets, people wearing historical clothing, wooden stalls selling fruits and vegetables, a castle visible in the background, lively and detailed, Renaissance-style art.",
+      title: "Medieval",
+    },
+    {
+      id: "magic-forest",
+      value:
+        "A mystical forest at twilight with glowing mushrooms, soft purple and blue light filtering through the trees, fireflies, ethereal and enchanted atmosphere, highly detailed, fantasy illustration.",
+      title: "Magic",
+    },
+    {
+      id: "alien-world",
+      value:
+        "A surreal alien landscape with bioluminescent plants, unusual rock formations, a vibrant purple sky with two moons, otherworldly atmosphere, sci-fi fantasy, glowing details.",
+      title: "Alien",
+    },
   ];
 
   useEffect(() => {
@@ -73,6 +95,8 @@ const Home = () => {
       const formData = new FormData();
       formData.append("image", blob, "captured_image.jpg");
       formData.append("tags", tags);
+      formData.append("strength", strength.toString());
+      formData.append("guidance_scale", guidanceScale.toString());
       const response = await fetch(`http://localhost:5000/generate_image`, {
         method: "POST",
         body: formData,
@@ -83,7 +107,7 @@ const Home = () => {
         const imageUrl = URL.createObjectURL(imageBlob);
         setPhoto(imageUrl);
         console.log("Generated image received and displayed!");
-        setStep(6);
+        setStep(7);
       } else {
         console.error("Failed to generate image");
       }
@@ -112,10 +136,14 @@ const Home = () => {
         <div className="flex w-full bg-[#f5f5f5] relative">
           <div className="flex items-center justify-center w-full max-h-screen overflow-hidden">
             {!photo ? (
-                <Camera stopCamera={stopCamera} />
+              <Camera stopCamera={stopCamera} />
             ) : (
               <div className="relative flex items-center justify-center w-full h-full">
-                <img src={photo} alt="Failed to generate an image" className="w-full h-full object-cover" />
+                <img
+                  src={photo}
+                  alt="Failed to generate an image"
+                  className="w-full h-full object-cover"
+                />
                 {loading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-neutral-600 bg-opacity-40 backdrop-blur-md text-white text-lg">
                     Generating image, please wait...
@@ -201,6 +229,68 @@ const Home = () => {
                   <img className="w-4 h-4" src="refresh.svg" alt="refresh" />
                 </button>
               </div>
+              <label className="flex flex-col mb-4">
+                <span>Strength (0-1):</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={strength}
+                  onChange={(e) => setStrength(parseFloat(e.target.value))}
+                  className="mt-2"
+                />
+                <span>{strength}</span>
+              </label>
+              <label className="flex flex-col mb-4">
+                <span>Guidance Scale (1-15):</span>
+                <input
+                  type="range"
+                  min="1"
+                  max="15"
+                  step="0.1"
+                  value={guidanceScale}
+                  onChange={(e) => setGuidanceScale(parseFloat(e.target.value))}
+                  className="mt-2"
+                />
+                <span>{guidanceScale}</span>
+              </label>
+              <button
+                onClick={() => setStep(6)}
+                className="p-3 w-full bg-blue-500 text-white rounded hover:bg-blue-600 mt-4"
+              >
+                Next
+              </button>
+            </div>
+          )}
+
+          {step === 6 && (
+            <div className="flex flex-col h-full w-full justify-between">
+              <div className="flex justify-between">
+                <button
+                  onClick={goBack}
+                  className="p-5 border rounded text-neutral-400"
+                >
+                  <svg
+                    className="w-4 h-4 rotate-180"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                </button>
+                <button onClick={retakePhoto} className="p-5 border rounded">
+                  <img className="w-4 h-4" src="refresh.svg" alt="refresh" />
+                </button>
+              </div>
 
               <button
                 onClick={sendPhotoWithTags}
@@ -222,7 +312,7 @@ const Home = () => {
             </div>
           )}
 
-          {step === 6 && (
+          {step === 7 && (
             <div className="flex flex-col h-full w-full justify-end">
               <button
                 onClick={retakePhoto}

@@ -14,5 +14,10 @@ async def take_photo():
     return get_last_photo()
 
 @api_router.post("/generate_image")
-async def generate_image_endpoint(image: UploadFile = File(...), tags: str = Form(...)):
-    return await generate_image(image, tags)
+async def generate_image_endpoint(
+    image: UploadFile = File(...),
+    tags: str = Form(...),
+    strength: float = Form(...),
+    guidance_scale: float = Form(...)
+):
+    return await generate_image(image, tags, strength, guidance_scale)
